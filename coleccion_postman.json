@@ -1,0 +1,149 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+    "name": "Ecosistema Microservicios - Gestion Proyectos",
+    "schema": "https://getpostman.com"
+  },
+  "item": [
+    {
+      "name": "1. API Gateway - Crear Usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nombre\": \"Luis Torres\",\n    \"email\": \"luis@empresa.com\",\n    \"rol\": \"QA Engineer\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/usuarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "usuarios"]
+        }
+      }
+    },
+    {
+      "name": "2. API Gateway - Listar Usuarios",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/usuarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "usuarios"]
+        }
+      }
+    },
+    {
+      "name": "3. API Gateway - Crear Proyecto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nombre\": \"Sistema Web Ventas\",\n    \"descripcion\": \"Ecommerce institucional\",\n    \"estado\": \"PLANIFICADO\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/proyectos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "proyectos"]
+        }
+      }
+    },
+    {
+      "name": "4. API Gateway - Crear Tarea",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"titulo\": \"Maquetado Frontend\",\n    \"descripcion\": \"Vistas con HTML y CSS\",\n    \"proyectoId\": 1,\n    \"usuarioResponsableId\": 1,\n    \"estado\": \"ASIGNADA\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/tareas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tareas"]
+        }
+      }
+    },
+    {
+      "name": "5. Inter-servicio - Validar Responsable OK",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/tareas/1/validar-responsable",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tareas", "1", "validar-responsable"]
+        }
+      }
+    },
+    {
+      "name": "6. Resiliencia - Simulacion Circuit Breaker Fallback",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/tareas/999/validar-responsable",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tareas", "999", "validar-responsable"]
+        },
+        "description": "Si apagas el contenedor de 'ms-usuarios' usando Docker o pides un ID inexistente, este endpoint disparará controladamente el método alternativo imprimiendo el mensaje exacto de error requerido."
+      }
+    },
+    {
+      "name": "7. Observabilidad - Actuator Health Gateway",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/actuator/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["actuator", "health"]
+        }
+      }
+    },
+    {
+      "name": "8. Config Remota - Mensaje Personalizado Usuarios",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/usuarios/mensaje",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "usuarios", "mensaje"]
+        }
+      }
+    }
+  ]
+}

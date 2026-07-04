@@ -1,0 +1,29 @@
+# Carpetas de compilación de Maven (Java)
+**/target/
+*.jar
+*.war
+*.ear
+
+# Archivos de configuración de IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Archivos de configuración de Eclipse (por si acaso)
+.settings/
+.classpath
+.project
+.factorypath
+
+# Logs del sistema y archivos temporales
+*.log
+.DS_Store
+Thumbs.db
+
+# Datos persistentes de bases de datos locales de Docker
+**/mysql_data/
+**/db_data/
+
+# Archivos de entorno con credenciales
+.env

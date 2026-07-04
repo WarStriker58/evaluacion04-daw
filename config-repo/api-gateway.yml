@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: route-usuarios
+          uri: lb://ms-usuarios
+          predicates:
+            - Path=/api/usuarios/**
+        - id: route-proyectos
+          uri: lb://ms-proyectos
+          predicates:
+            - Path=/api/proyectos/**
+        - id: route-tareas
+          uri: lb://ms-tareas
+          predicates:
+            - Path=/api/tareas/**
+
+custom:
+  message: "API Gateway - Enrutador Unico de la Plataforma de Proyectos"

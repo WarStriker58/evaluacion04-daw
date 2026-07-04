@@ -1,0 +1,118 @@
+version: '3.8'
+
+services:
+  # --- BASES DE DATOS INDEPENDIENTES (REQUERIMIENTO 7) ---
+  db-usuarios:
+    image: mysql:8.0
+    container_name: db-usuarios
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: db_usuarios
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-proyectos:
+    image: mysql:8.0
+    container_name: db-proyectos
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: db_proyectos
+    ports:
+      - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-tareas:
+    image: mysql:8.0
+    container_name: db-tareas
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: db_tareas
+    ports:
+      - "3309:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- COMPONENTES DE INFRAESTRUCTURA SPRING CLOUD ---
+  config-server:
+    build: ./config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./config-repo:/app/config-repo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/ms-usuarios/default"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+  # --- MICROSERVICIOS DE NEGOCIO ---
+  ms-usuarios:
+    build: ./ms-usuarios
+    container_name: ms-usuarios
+    depends_on:
+      db-usuarios:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+  ms-proyectos:
+    build: ./ms-proyectos
+    container_name: ms-proyectos
+    depends_on:
+      db-proyectos:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+  ms-tareas:
+    build: ./ms-tareas
+    container_name: ms-tareas
+    depends_on:
+      db-tareas:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
